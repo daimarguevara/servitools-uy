@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ServiTools UY — Soluciones reales, a la vuelta de la esquina</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --blue:       #2563EB;
+    --blue-light: #60a5fa;
+    --dark:       #1e293b;
+    --bg:         #f8fafc;
+    --white:      #ffffff;
+    --gray:       #64748b;
+    --gray-light: #e2e8f0;
+    --radius:     14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ─────────────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 6%;
+    background: rgba(248,250,252,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--gray-light);
+    animation: fadeDown .6s ease both;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.35rem; font-weight: 800;
+    color: var(--dark); text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .nav-logo .dot { color: var(--blue); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    font-size: .9rem; font-weight: 500; color: var(--gray);
+    text-decoration: none; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--blue); }
+  .nav-cta {
+    background: var(--blue); color: var(--white);
+    padding: 10px 22px; border-radius: 50px;
+    font-size: .88rem; font-weight: 600;
+    text-decoration: none; transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(37,99,235,.3);
+  }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,.4); }
+
+  /* ── HERO ────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 60px;
+    padding: 120px 6% 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(96,165,250,.18) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; bottom: -150px; left: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(37,99,235,.1) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+
+  .hero-text { position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(37,99,235,.09); color: var(--blue);
+    padding: 7px 16px; border-radius: 50px;
+    font-size: .8rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeUp .7s .1s ease both;
+  }
+  .hero-badge::before {
+    content: ''; width: 7px; height: 7px;
+    background: var(--blue); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 800; line-height: 1.1;
+    color: var(--dark);
+    animation: fadeUp .7s .2s ease both;
+  }
+  .hero h1 span { color: var(--blue); }
+  .hero p {
+    margin-top: 22px; font-size: 1.05rem;
+    color: var(--gray); line-height: 1.75; max-width: 480px;
+    animation: fadeUp .7s .3s ease both;
+  }
+  .hero-btns {
+    display: flex; gap: 16px; margin-top: 40px; flex-wrap: wrap;
+    animation: fadeUp .7s .4s ease both;
+  }
+  .btn-primary {
+    background: var(--blue); color: var(--white);
+    padding: 14px 32px; border-radius: 50px;
+    font-size: .95rem; font-weight: 600; text-decoration: none;
+    box-shadow: 0 6px 24px rgba(37,99,235,.35);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(37,99,235,.45); }
+  .btn-secondary {
+    background: var(--white); color: var(--dark);
+    padding: 14px 32px; border-radius: 50px;
+    font-size: .95rem; font-weight: 600; text-decoration: none;
+    border: 1.5px solid var(--gray-light);
+    transition: border-color .2s, transform .2s;
+  }
+  .btn-secondary:hover { border-color: var(--blue); transform: translateY(-3px); }
+
+  .hero-stats {
+    display: flex; gap: 36px; margin-top: 52px;
+    animation: fadeUp .7s .5s ease both;
+  }
+  .stat-item { display: flex; flex-direction: column; gap: 4px; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem; font-weight: 800; color: var(--dark);
+  }
+  .stat-label { font-size: .8rem; color: var(--gray); font-weight: 500; }
+
+  /* Hero visual */
+  .hero-visual {
+    position: relative; z-index: 1;
+    animation: fadeUp .8s .3s ease both;
+  }
+  .phone-mockup {
+    width: 280px; margin: 0 auto;
+    background: var(--dark);
+    border-radius: 40px; padding: 12px;
+    box-shadow: 0 30px 80px rgba(30,41,59,.25), 0 0 0 1px rgba(255,255,255,.05);
+    position: relative;
+  }
+  .phone-screen {
+    background: var(--bg);
+    border-radius: 30px; overflow: hidden;
+    height: 480px; position: relative;
+  }
+  .phone-notch {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 24px;
+    background: var(--dark); border-radius: 20px; z-index: 10;
+  }
+  .screen-header {
+    background: var(--blue); padding: 46px 16px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .screen-title { color: white; font-family: 'Syne',sans-serif; font-size: .95rem; font-weight: 700; }
+  .screen-icon { width: 28px; height: 28px; background: rgba(255,255,255,.2); border-radius: 8px; }
+  .screen-search {
+    margin: 12px; background: white; border-radius: 12px;
+    padding: 10px 14px; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  }
+  .search-dot { width: 14px; height: 14px; background: var(--blue-light); border-radius: 50%; }
+  .search-bar { height: 8px; background: var(--gray-light); border-radius: 4px; flex: 1; }
+  .screen-cards { padding: 4px 12px; display: flex; flex-direction: column; gap: 8px; }
+  .screen-card {
+    background: white; border-radius: 12px;
+    padding: 12px; display: flex; gap: 10px; align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    animation: slideIn .5s ease both;
+  }
+  .screen-card:nth-child(2) { animation-delay: .1s; }
+  .screen-card:nth-child(3) { animation-delay: .2s; }
+  .card-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .card-info { flex: 1; }
+  .card-name { font-size: .78rem; font-weight: 600; color: var(--dark); margin-bottom: 3px; }
+  .card-sub { font-size: .68rem; color: var(--gray); }
+  .card-badge {
+    font-size: .6rem; font-weight: 700;
+    background: rgba(37,99,235,.1); color: var(--blue);
+    padding: 3px 8px; border-radius: 20px;
+  }
+  .floating-card {
+    position: absolute; right: -30px; top: 30%;
+    background: white; border-radius: 16px;
+    padding: 12px 16px; box-shadow: 0 12px 40px rgba(0,0,0,.12);
+    display: flex; align-items: center; gap: 10px;
+    animation: floatCard 3s ease-in-out infinite;
+  }
+  .fc-icon {
+    width: 36px; height: 36px; background: rgba(37,99,235,.1);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    color: var(--blue); font-size: 1rem;
+  }
+  .fc-text { font-size: .72rem; font-weight: 600; color: var(--dark); }
+  .fc-sub { font-size: .64rem; color: var(--gray); }
+  .floating-card2 {
+    position: absolute; left: -20px; bottom: 25%;
+    background: var(--blue); border-radius: 16px;
+    padding: 10px 14px; box-shadow: 0 8px 30px rgba(37,99,235,.4);
+    animation: floatCard 3.5s ease-in-out infinite reverse;
+  }
+  .fc2-text { font-size: .7rem; font-weight: 600; color: white; }
+  .fc2-num { font-family: 'Syne',sans-serif; font-size: 1.3rem; font-weight: 800; color: white; }
+
+  /* ── CÓMO FUNCIONA ───────────────────────────────── */
+  section { padding: 100px 6%; }
+  .section-tag {
+    display: inline-block;
+    font-size: .75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .1em;
+    color: var(--blue); margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 800; color: var(--dark); line-height: 1.2;
+  }
+  .section-title span { color: var(--blue); }
+  .section-sub {
+    margin-top: 14px; font-size: 1rem;
+    color: var(--gray); max-width: 520px; line-height: 1.7;
+  }
+
+  #como-funciona { background: white; }
+  .tabs-container { margin-top: 60px; }
+  .tabs {
+    display: flex; gap: 8px; margin-bottom: 48px;
+    background: var(--bg); padding: 6px; border-radius: 16px;
+    width: fit-content;
+  }
+  .tab-btn {
+    padding: 12px 28px; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-size: .9rem; font-weight: 600;
+    cursor: pointer; border: none; transition: all .25s;
+    color: var(--gray); background: transparent;
+  }
+  .tab-btn.active {
+    background: var(--blue); color: white;
+    box-shadow: 0 4px 14px rgba(37,99,235,.35);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+  .step-card {
+    background: var(--bg); border-radius: var(--radius);
+    padding: 32px; position: relative; overflow: hidden;
+    border: 1.5px solid var(--gray-light);
+    transition: transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .step-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(37,99,235,.1);
+    border-color: var(--blue-light);
+  }
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 3.5rem; font-weight: 800;
+    color: rgba(37,99,235,.08); position: absolute;
+    top: 12px; right: 20px; line-height: 1;
+  }
+  .step-icon {
+    width: 50px; height: 50px; background: rgba(37,99,235,.1);
+    border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px; font-size: 1.4rem;
+  }
+  .step-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem; font-weight: 700; margin-bottom: 10px;
+  }
+  .step-card p { font-size: .88rem; color: var(--gray); line-height: 1.65; }
+
+  /* ── PRECIOS ─────────────────────────────────────── */
+  #precios { background: var(--bg); }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px; margin-top: 60px; align-items: start;
+  }
+  .price-card {
+    background: white; border-radius: 20px;
+    padding: 36px 32px; border: 1.5px solid var(--gray-light);
+    transition: transform .25s, box-shadow .25s;
+    position: relative;
+  }
+  .price-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,.08); }
+  .price-card.featured {
+    background: var(--dark); border-color: var(--dark);
+    transform: scale(1.04);
+  }
+  .price-card.featured:hover { transform: scale(1.04) translateY(-6px); }
+  .featured-tag {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--blue); color: white;
+    padding: 5px 18px; border-radius: 20px;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    white-space: nowrap;
+  }
+  .price-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 700; margin-bottom: 8px;
+    color: var(--dark);
+  }
+  .price-card.featured .price-name { color: white; }
+  .price-amount {
+    display: flex; align-items: flex-end; gap: 4px; margin-bottom: 6px;
+  }
+  .price-currency { font-size: 1rem; font-weight: 600; color: var(--gray); margin-bottom: 8px; }
+  .price-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.8rem; font-weight: 800; color: var(--dark); line-height: 1;
+  }
+  .price-card.featured .price-currency,
+  .price-card.featured .price-num { color: white; }
+  .price-period { font-size: .8rem; color: var(--gray); margin-bottom: 28px; }
+  .price-card.featured .price-period { color: rgba(255,255,255,.5); }
+  .price-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+  .price-features li {
+    display: flex; align-items: center; gap: 10px;
+    font-size: .88rem; color: var(--gray);
+  }
+  .price-card.featured .price-features li { color: rgba(255,255,255,.75); }
+  .check {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(37,99,235,.1); display: flex;
+    align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: .6rem;
+  }
+  .price-card.featured .check { background: rgba(96,165,250,.2); }
+  .price-btn {
+    display: block; text-align: center;
+    padding: 14px; border-radius: 12px;
+    font-weight: 600; font-size: .9rem; text-decoration: none;
+    transition: all .2s;
+  }
+  .price-btn-outline {
+    border: 1.5px solid var(--gray-light); color: var(--dark);
+  }
+  .price-btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+  .price-btn-solid {
+    background: var(--blue); color: white;
+    box-shadow: 0 4px 16px rgba(37,99,235,.35);
+  }
+  .price-btn-solid:hover { box-shadow: 0 8px 28px rgba(37,99,235,.5); }
+  .price-btn-white {
+    background: white; color: var(--dark);
+  }
+  .price-btn-white:hover { background: var(--bg); }
+
+  /* ── DESCARGA ────────────────────────────────────── */
+  #descarga {
+    background: var(--dark);
+    position: relative; overflow: hidden;
+  }
+  #descarga::before {
+    content: '';
+    position: absolute; top: -300px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(37,99,235,.25) 0%, transparent 65%);
+    border-radius: 50%;
+  }
+  .download-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center; position: relative; z-index: 1;
+  }
+  .download-text .section-title { color: white; }
+  .download-text .section-sub { color: rgba(255,255,255,.55); }
+  .store-btns { display: flex; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
+  .store-btn {
+    display: flex; align-items: center; gap: 12px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 14px; padding: 12px 22px; text-decoration: none;
+    transition: all .2s; backdrop-filter: blur(10px);
+  }
+  .store-btn:hover { background: rgba(255,255,255,.15); transform: translateY(-3px); }
+  .store-icon { font-size: 1.6rem; }
+  .store-info { display: flex; flex-direction: column; }
+  .store-small { font-size: .65rem; color: rgba(255,255,255,.55); }
+  .store-name { font-family: 'Syne',sans-serif; font-size: .95rem; font-weight: 700; color: white; }
+  .download-phones {
+    display: flex; justify-content: center; gap: -20px; position: relative;
+  }
+  .dl-phone {
+    width: 180px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 32px; padding: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+  .dl-phone:first-child { transform: rotate(-8deg) translateX(20px); }
+  .dl-phone:last-child { transform: rotate(8deg) translateX(-20px); }
+  .dl-screen {
+    background: var(--bg); border-radius: 24px;
+    height: 320px; overflow: hidden;
+  }
+  .dl-screen-header {
+    background: var(--blue); padding: 20px 12px 12px;
+    height: 90px;
+  }
+  .dl-screen-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+  .dl-mini-card {
+    background: white; border-radius: 8px; padding: 10px;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .dl-mc-icon {
+    width: 28px; height: 28px; border-radius: 7px;
+    flex-shrink: 0;
+  }
+  .dl-mc-bar1 { height: 7px; background: var(--gray-light); border-radius: 3px; margin-bottom: 4px; width: 80%; }
+  .dl-mc-bar2 { height: 5px; background: var(--gray-light); border-radius: 3px; width: 50%; }
+
+  /* ── CONTACTO ────────────────────────────────────── */
+  #contacto { background: white; }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 80px; margin-top: 60px; align-items: start;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 28px; }
+  .contact-item {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+  .contact-icon {
+    width: 46px; height: 46px; border-radius: 12px;
+    background: rgba(37,99,235,.1); display: flex;
+    align-items: center; justify-content: center;
+    font-size: 1.1rem; flex-shrink: 0;
+  }
+  .contact-item h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: .95rem; font-weight: 700; margin-bottom: 4px;
+  }
+  .contact-item p { font-size: .88rem; color: var(--gray); }
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: .8rem; font-weight: 600; color: var(--dark); }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 13px 16px; border-radius: 12px;
+    border: 1.5px solid var(--gray-light);
+    font-family: 'DM Sans', sans-serif; font-size: .9rem;
+    color: var(--dark); background: var(--bg);
+    transition: border-color .2s, box-shadow .2s; outline: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+  }
+  .form-group textarea { resize: vertical; min-height: 110px; }
+  .form-submit {
+    background: var(--blue); color: white;
+    padding: 15px 36px; border-radius: 50px;
+    border: none; font-family: 'DM Sans', sans-serif;
+    font-size: .95rem; font-weight: 600; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(37,99,235,.35);
+    transition: transform .2s, box-shadow .2s; align-self: flex-start;
+  }
+  .form-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(37,99,235,.45); }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer {
+    background: var(--dark); color: rgba(255,255,255,.5);
+    padding: 60px 6% 30px;
+  }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 48px; margin-bottom: 48px;
+  }
+  .footer-brand .nav-logo { color: white; margin-bottom: 14px; display: inline-flex; }
+  .footer-brand p { font-size: .85rem; line-height: 1.7; max-width: 260px; }
+  .footer-col h5 {
+    font-family: 'Syne', sans-serif; font-size: .85rem;
+    font-weight: 700; color: white; margin-bottom: 16px;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul a { color: rgba(255,255,255,.45); font-size: .85rem; text-decoration: none; transition: color .2s; }
+  .footer-col ul a:hover { color: var(--blue-light); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 28px; display: flex;
+    justify-content: space-between; align-items: center;
+    font-size: .8rem;
+  }
+  .footer-bottom a { color: rgba(255,255,255,.4); text-decoration: none; }
+  .footer-bottom a:hover { color: var(--blue-light); }
+  .social-links { display: flex; gap: 12px; }
+  .social-link {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(255,255,255,.07);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .85rem; text-decoration: none;
+    transition: background .2s, transform .2s;
+  }
+  .social-link:hover { background: var(--blue); transform: translateY(-2px); }
+
+  /* ── ANIMATIONS ──────────────────────────────────── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: .5; transform: scale(1.4); }
+  }
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ──────────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 100px; }
+    .hero-visual { display: none; }
+    .tab-panel.active { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .price-card.featured { transform: none; }
+    .download-inner { grid-template-columns: 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="8" fill="#2563EB"/>
+      <path d="M8 20L14 8L20 20" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="14" cy="15" r="2" fill="white"/>
+    </svg>
+    ServiTools<span class="dot"> UY</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#precios">Precios</a></li>
+    <li><a href="#descarga">Descargá la app</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+  </ul>
+  <a class="nav-cta" href="#precios">Registrá tu negocio</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge">🇺🇾 Plataforma uruguaya</div>
+    <h1>Soluciones reales,<br><span>a la vuelta</span><br>de la esquina</h1>
+    <p>Conectamos a los uruguayos con los mejores técnicos, electricistas, plomeros y más — cerca tuyo, disponibles ahora.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#descarga">Descargá la app</a>
+      <a class="btn-secondary" href="#precios">Registrá tu negocio →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">Negocios activos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">19</span>
+        <span class="stat-label">Departamentos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4.8★</span>
+        <span class="stat-label">Valoración media</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="phone-mockup">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="screen-header">
+          <span class="screen-title">ServiTools UY</span>
+          <div class="screen-icon"></div>
+        </div>
+        <div class="screen-search">
+          <div class="search-dot"></div>
+          <div class="search-bar"></div>
+        </div>
+        <div class="screen-cards">
+          <div class="screen-card">
+            <div class="card-icon" style="background:rgba(37,99,235,.1)">🔧</div>
+            <div class="card-info">
+              <div class="card-name">TechFix Montevideo</div>
+              <div class="card-sub">Electricidad · 1.2 km</div>
+            </div>
+            <span class="card-badge">Abierto</span>
+          </div>
+          <div class="screen-card">
+            <div class="card-icon" style="background:rgba(96,165,250,.1)">🔌</div>
+            <div class="card-info">
+              <div class="card-name">Instalaciones Rápidas</div>
+              <div class="card-sub">Plomería · 2.4 km</div>
+            </div>
+            <span class="card-badge">Abierto</span>
+          </div>
+          <div class="screen-card">
+            <div class="card-icon" style="background:rgba(30,41,59,.08)">🏠</div>
+            <div class="card-info">
+              <div class="card-name">Reformas Sur</div>
+              <div class="card-sub">Construcción · 3.1 km</div>
+            </div>
+            <span class="card-badge" style="background:rgba(100,116,139,.1);color:#64748b">Cerrado</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="floating-card">
+      <div class="fc-icon">📍</div>
+      <div>
+        <div class="fc-text">Ubicación activa</div>
+        <div class="fc-sub">Mostrando negocios cercanos</div>
+      </div>
+    </div>
+    <div class="floating-card2">
+      <div class="fc2-text">Nuevos negocios hoy</div>
+      <div class="fc2-num">+12</div>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section id="como-funciona">
+  <div class="reveal">
+    <span class="section-tag">Cómo funciona</span>
+    <h2 class="section-title">Simple para todos,<br><span>poderoso por dentro</span></h2>
+    <p class="section-sub">Dos experiencias diseñadas a medida: una para quien busca ayuda y otra para quien la ofrece.</p>
+  </div>
+
+  <div class="tabs-container reveal">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('usuarios', this)">Para usuarios</button>
+      <button class="tab-btn" onclick="switchTab('negocios', this)">Para negocios</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-usuarios">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <div class="step-icon">📱</div>
+        <h3>Descargá la app</h3>
+        <p>Disponible para iOS y Android. Instalala gratis y creá tu cuenta en menos de 2 minutos.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <div class="step-icon">📍</div>
+        <h3>Buscá cerca tuyo</h3>
+        <p>Activá tu ubicación y encontrá técnicos, electricistas, plomeros y más en tu zona ahora mismo.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <div class="step-icon">✅</div>
+        <h3>Contactá y solucioná</h3>
+        <p>Llamá o escribí directamente al negocio. Sin intermediarios, sin comisiones, sin vueltas.</p>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-negocios">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <div class="step-icon">🏢</div>
+        <h3>Registrá tu negocio</h3>
+        <p>Completá tu perfil con fotos, servicios, horarios y zona de cobertura. Listo en minutos.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <div class="step-icon">🚀</div>
+        <h3>Aparecé en el mapa</h3>
+        <p>Tu negocio se muestra automáticamente a los usuarios cercanos que buscan tus servicios.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <div class="step-icon">💰</div>
+        <h3>Recibí más clientes</h3>
+        <p>Gestioná consultas, acumulá reseñas y hacé crecer tu reputación dentro de la plataforma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRECIOS -->
+<section id="precios">
+  <div class="reveal">
+    <span class="section-tag">Planes</span>
+    <h2 class="section-title">Un precio justo<br><span>para cada negocio</span></h2>
+    <p class="section-sub">Elegí el plan que mejor se adapta a tu negocio. Sin costos ocultos, cancelás cuando querés.</p>
+  </div>
+
+  <div class="pricing-grid reveal">
+    <div class="price-card">
+      <div class="price-name">Básico</div>
+      <div class="price-amount">
+        <span class="price-currency">$UY</span>
+        <span class="price-num">490</span>
+      </div>
+      <div class="price-period">por mes · débito automático</div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Perfil de negocio completo</li>
+        <li><span class="check">✓</span> Aparecer en el mapa</li>
+        <li><span class="check">✓</span> Hasta 5 fotos</li>
+        <li><span class="check">✓</span> Reseñas de clientes</li>
+        <li><span class="check">✓</span> Soporte por email</li>
+      </ul>
+      <a href="#contacto" class="price-btn price-btn-outline">Empezar ahora</a>
+    </div>
+
+    <div class="price-card featured">
+      <span class="featured-tag">⚡ Más popular</span>
+      <div class="price-name">Profesional</div>
+      <div class="price-amount">
+        <span class="price-currency" style="color:rgba(255,255,255,.6)">$UY</span>
+        <span class="price-num">890</span>
+      </div>
+      <div class="price-period">por mes · débito automático</div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Todo lo del plan Básico</li>
+        <li><span class="check">✓</span> Posición destacada en búsquedas</li>
+        <li><span class="check">✓</span> Fotos ilimitadas</li>
+        <li><span class="check">✓</span> Estadísticas y gráficos</li>
+        <li><span class="check">✓</span> Botón de WhatsApp directo</li>
+        <li><span class="check">✓</span> Soporte prioritario</li>
+      </ul>
+      <a href="#contacto" class="price-btn price-btn-solid">Empezar ahora</a>
+    </div>
+
+    <div class="price-card">
+      <div class="price-name">Premium</div>
+      <div class="price-amount">
+        <span class="price-currency">$UY</span>
+        <span class="price-num">1.490</span>
+      </div>
+      <div class="price-period">por mes · débito automático</div>
+      <ul class="price-features">
+        <li><span class="check">✓</span> Todo lo del plan Profesional</li>
+        <li><span class="check">✓</span> Banner publicitario en la app</li>
+        <li><span class="check">✓</span> Múltiples sucursales</li>
+        <li><span class="check">✓</span> Perfil verificado ✔</li>
+        <li><span class="check">✓</span> Gestor de cuenta dedicado</li>
+      </ul>
+      <a href="#contacto" class="price-btn price-btn-outline">Empezar ahora</a>
+    </div>
+  </div>
+
+  <p style="text-align:center;margin-top:32px;font-size:.85rem;color:var(--gray)">
+    💳 Pagos procesados de forma segura por <strong>Mercado Pago</strong> · Cancelás en cualquier momento
+  </p>
+</section>
+
+<!-- DESCARGA -->
+<section id="descarga">
+  <div class="download-inner">
+    <div class="download-text reveal">
+      <span class="section-tag" style="color:var(--blue-light)">Descargá la app</span>
+      <h2 class="section-title">Llevá ServiTools<br>en tu bolsillo</h2>
+      <p class="section-sub">Encontrá ayuda profesional en segundos, estés donde estés. Disponible gratis para iOS y Android.</p>
+      <div class="store-btns">
+        <a href="#" class="store-btn">
+          <span class="store-icon">🍎</span>
+          <div class="store-info">
+            <span class="store-small">Disponible en</span>
+            <span class="store-name">App Store</span>
+          </div>
+        </a>
+        <a href="#" class="store-btn">
+          <span class="store-icon">▶</span>
+          <div class="store-info">
+            <span class="store-small">Disponible en</span>
+            <span class="store-name">Google Play</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="download-phones reveal">
+      <div class="dl-phone">
+        <div class="dl-screen">
+          <div class="dl-screen-header" style="background:var(--blue)"></div>
+          <div class="dl-screen-body">
+            <div class="dl-mini-card"><div class="dl-mc-icon" style="background:rgba(37,99,235,.15)"></div><div><div class="dl-mc-bar1"></div><div class="dl-mc-bar2"></div></div></div>
+            <div class="dl-mini-card"><div class="dl-mc-icon" style="background:rgba(96,165,250,.15)"></div><div><div class="dl-mc-bar1"></div><div class="dl-mc-bar2"></div></div></div>
+            <div class="dl-mini-card"><div class="dl-mc-icon" style="background:rgba(30,41,59,.1)"></div><div><div class="dl-mc-bar1"></div><div class="dl-mc-bar2"></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="dl-phone">
+        <div class="dl-screen">
+          <div class="dl-screen-header" style="background:var(--dark)"></div>
+          <div class="dl-screen-body">
+            <div class="dl-mini-card"><div class="dl-mc-icon" style="background:rgba(37,99,235,.15)"></div><div><div class="dl-mc-bar1"></div><div class="dl-mc-bar2"></div></div></div>
+            <div class="dl-mini-card"><div class="dl-mc-icon" style="background:rgba(96,165,250,.15)"></div><div><div class="dl-mc-bar1"></div><div class="dl-mc-bar2"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="reveal">
+    <span class="section-tag">Contacto</span>
+    <h2 class="section-title">¿Tenés dudas?<br><span>Hablemos</span></h2>
+    <p class="section-sub">Ya sea para registrar tu negocio o resolver una consulta, estamos para ayudarte.</p>
+  </div>
+
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <div>
+          <h4>Email</h4>
+          <p>hola@servitools.uy</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💬</div>
+        <div>
+          <h4>WhatsApp</h4>
+          <p>+598 9X XXX XXX</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🇺🇾</div>
+        <div>
+          <h4>Ubicación</h4>
+          <p>Montevideo, Uruguay</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">🕐</div>
+        <div>
+          <h4>Horario de atención</h4>
+          <p>Lunes a viernes · 9:00 a 18:00</p>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form reveal" onsubmit="handleForm(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" placeholder="Tu nombre"/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="tu@email.com"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Consulta sobre</label>
+        <select>
+          <option>Registrar mi negocio</option>
+          <option>Soporte técnico</option>
+          <option>Planes y precios</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mensaje</label>
+        <textarea placeholder="Contanos en qué podemos ayudarte..."></textarea>
+      </div>
+      <button type="submit" class="form-submit">Enviar mensaje →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="nav-logo" href="#">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="8" fill="#2563EB"/>
+          <path d="M8 20L14 8L20 20" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="14" cy="15" r="2" fill="white"/>
+        </svg>
+        ServiTools UY
+      </a>
+      <p>Conectamos uruguayos con profesionales de confianza cerca suyo. Simple, rápido, local.</p>
+      <div class="social-links" style="margin-top:20px">
+        <a href="#" class="social-link">📘</a>
+        <a href="#" class="social-link">📸</a>
+        <a href="#" class="social-link">🐦</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Plataforma</h5>
+      <ul>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="#descarga">Descargá la app</a></li>
+        <li><a href="#">Para negocios</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Empresa</h5>
+      <ul>
+        <li><a href="#">Sobre nosotros</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Prensa</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Legal</h5>
+      <ul>
+        <li><a href="#">Términos de uso</a></li>
+        <li><a href="#">Privacidad</a></li>
+        <li><a href="#">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 ServiTools UY. Todos los derechos reservados.</span>
+    <span>Hecho con ❤️ en Uruguay 🇺🇾</span>
+  </div>
+</footer>
+
+<script>
+  // Tab switching
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Form
+  function handleForm(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent = '✓ Mensaje enviado';
+    btn.style.background = '#16a34a';
+    setTimeout(() => {
+      btn.textContent = 'Enviar mensaje →';
+      btn.style.background = '';
+      e.target.reset();
+    }, 3000);
+  }
+</script>
+</body>
+</html>
